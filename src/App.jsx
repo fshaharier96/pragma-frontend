@@ -16,6 +16,19 @@ import Registration from './pages/Registration/Registration.jsx'
 import PasswordResetForm from './pages/Registration/PasswordResetForm.jsx'
 import ForgetPasswordForm from './pages/Registration/ForgetPasswordForm.jsx'
 import { Routes, Route, useLocation } from 'react-router-dom'
+import StockMovement from './pages/StockMovement/StockMovement.jsx'
+import CreateCategory from './pages/Category/CreateCategory.jsx'
+import UpdateCategory from './pages/Category/UpdateCategory.jsx'
+import CreateCustomer from './pages/Customer/CreateCustomer.jsx'
+import UpdateCustomer from './pages/Customer/UpdateCustomer.jsx'
+import CreateProduct from './pages/Product/CreateProduct.jsx'
+import UpdateProduct from './pages/Product/UpdateProduct.jsx'
+import CreatePurchase from './pages/Purchase/CreatePurchase.jsx'
+import UpdatePurchase from './pages/Purchase/UpdatePurchase.jsx'
+import CreateSale from './pages/Sale/CreateSale.jsx'
+import UpdateSale from './pages/Sale/UpdateSale.jsx'
+import CreateSupplier from './pages/Supplier/CreateSupplier.jsx'
+import UpdateSupplier from './pages/Supplier/UpdateSupplier.jsx'
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -30,7 +43,7 @@ function App() {
   }, [showSidebar])
 
   return (
-    <div className="relative flex min-h-screen bg-slate-100 text-slate-900">
+    <div className="relative flex min-h-screen overflow-x-hidden bg-slate-100 text-slate-900">
       {showSidebar && (
         <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       )}
@@ -41,7 +54,7 @@ function App() {
         />
       )}
 
-      <div className="flex-1">
+      <div className={`min-w-0 flex-1 ${showSidebar ? 'md:pl-72' : ''}`}>
         <div className="sticky top-0 z-20 border-b border-slate-200/80 bg-slate-100 px-4 py-3 shadow-sm shadow-slate-200/20 md:hidden">
           <button
             type="button"
@@ -54,7 +67,7 @@ function App() {
           </button>
         </div>
 
-        <main className="px-0 py-5 md:px-0">
+        <main className="min-w-0 overflow-x-auto px-0 py-5 md:px-0">
           <Routes>
             <Route path="/" element={<Login />} />
             <Route path="/registration" element={<Registration />} />
@@ -67,6 +80,19 @@ function App() {
             <Route path="/sales" element={<Sales />} />
             <Route path="/suppliers" element={<Suppliers />} />
             <Route path="/customers" element={<Customers />} />
+            <Route path="/stockMovement" element={<StockMovement />} />
+            <Route path="/category/create" element={<CreateCategory />} />
+            <Route path="/category/update/:id" element={<UpdateCategory />} />
+            <Route path="/customer/create" element={<CreateCustomer />} />
+            <Route path="/customer/update/:id" element={<UpdateCustomer />} />
+            <Route path="/product/create" element={<CreateProduct />} />
+            <Route path="/product/update/:id" element={<UpdateProduct />} />
+            <Route path="/purchase/create" element={<CreatePurchase />} />
+            <Route path="/purchase/update/:id" element={<UpdatePurchase />} />
+            <Route path="/sale/create" element={<CreateSale />} />
+            <Route path="/sale/update/:id" element={<UpdateSale />} />
+            <Route path="/supplier/create" element={<CreateSupplier />} />
+            <Route path="/supplier/update/:id" element={<UpdateSupplier />} />
           </Routes>
         </main>
       </div>

@@ -118,18 +118,36 @@ const menuItems = [
       </svg>
     ),
   },
+  {
+    label: 'Stock Movement',
+    path: '/stockMovement',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09c.71 0 1.34-.4 1.61-1.01a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09c0 .71.4 1.34 1.01 1.61a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.05.72.46 1.35 1.1 1.69Z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+  },
 ]
 
-const Sidebar = () => {
+const Sidebar = ({ open = false, onClose }) => {
   const [openMenu, setOpenMenu] = useState(null)
   const location = useLocation()
 
   const isActive = (path) => location.pathname === path
   const hasActiveChild = (subMenu) => subMenu?.some((child) => isActive(child.path))
 
+  const handleNavigate = () => {
+    onClose?.()
+  }
+
   return (
-    <aside className="flex h-screen w-72 flex-col bg-slate-950 text-slate-100 shadow-2xl ring-1 ring-slate-800">
-      <div className="flex h-full flex-col px-5 py-6">
+    <aside
+      className={`fixed inset-y-0 left-0 z-30 flex h-dvh w-[min(18rem,calc(100vw-2rem))] flex-col bg-slate-950 text-slate-100 shadow-2xl ring-1 ring-slate-800 transition-transform duration-200 md:w-72 md:translate-x-0 ${
+        open ? 'translate-x-0' : '-translate-x-full'
+      }`}
+    >
+      <div className="flex h-full min-h-0 flex-col overflow-y-auto px-5 py-6">
         <div className="mb-8 flex items-center gap-3">
           <div className="flex h-12 w-12 items-center justify-center rounded-3xl bg-sky-500 text-lg font-bold text-slate-950 shadow-lg shadow-sky-500/20">
             P
@@ -188,6 +206,7 @@ const Sidebar = () => {
                   <Link
                     key={item.label}
                     to={item.path}
+                    onClick={handleNavigate}
                     className={`group flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-300 ${
                       isParentActive
                         ? 'bg-sky-500/15 text-sky-300 shadow-md shadow-sky-500/10 ring-1 ring-sky-500/20'
@@ -209,6 +228,7 @@ const Sidebar = () => {
                       <Link
                         key={subItem.label}
                         to={subItem.path}
+                        onClick={handleNavigate}
                         className={`flex items-center gap-3 rounded-xl px-4 py-2 my-1 text-sm transition duration-200 ${
                           isActive(subItem.path)
                             ? 'bg-sky-500/15 text-sky-300 ring-1 ring-sky-500/20'
@@ -235,6 +255,7 @@ const Sidebar = () => {
         <div className="mt-6 rounded-[2rem] bg-slate-900/90 p-4 ring-1 ring-white/10 shadow-inner shadow-slate-950/20">
           <Link
             to="/logout"
+            onClick={handleNavigate}
             className="flex items-center gap-3 rounded-3xl px-4 py-3 text-sm font-medium text-slate-300 transition hover:bg-slate-800 hover:text-white"
           >
             <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-900 text-slate-400">

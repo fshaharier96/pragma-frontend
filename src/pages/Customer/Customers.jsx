@@ -1,12 +1,23 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import API_BASE_URL from "../../config";
-import { FiDownload, FiUserPlus, FiTrash2 } from "react-icons/fi";
+import { FiUserPlus, FiTrash2 } from "react-icons/fi";
 import { FaPenToSquare } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
+import { useDeleteToast } from "../../hooks/useDeleteToast";
 
 const Customers = () => {
+  const navigate = useNavigate();
   const [customers, setCustomers] = useState([]);
   const [search, setSearch] = useState("");
+  const { requestDelete, deletingId, deleteToast } = useDeleteToast({
+    entityName: "Customer",
+    endpoint: "/api/customers/delete",
+    onDeleted: (id) =>
+      setCustomers((previousCustomers) =>
+        previousCustomers.filter((customer) => customer.id !== id)
+      ),
+  });
 
   useEffect(() => {
     getCustomers();
@@ -66,6 +77,8 @@ const Customers = () => {
 
   return (
     <div className="p-4 md:p-6 bg-gray-50 min-h-screen">
+      {deleteToast}
+
       {/* Page Header */}
       <div className="mb-8">
         <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
@@ -90,7 +103,10 @@ const Customers = () => {
               onChange={(e) => setSearch(e.target.value)}
               className="px-4 py-2 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm w-full sm:w-auto"
             />
-             <button className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm md:text-base whitespace-nowrap">
+             <button
+              onClick={() => navigate("/customer/create")}
+              className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm md:text-base whitespace-nowrap"
+            >
               <FiUserPlus size={18} />
               Add Customer
             </button>
@@ -99,22 +115,22 @@ const Customers = () => {
 
         {/* Table Responsive */}
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full min-w-[900px]">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
                 <th className="text-left px-4 md:px-6 py-4 text-gray-700 font-medium text-sm">
                   Customers
                 </th>
-                <th className="text-left px-4 md:px-6 py-4 text-gray-700 font-medium text-sm hidden md:table-cell">
+                <th className="text-left px-4 md:px-6 py-4 text-gray-700 font-medium text-sm">
                   Email Subscription
                 </th>
-                <th className="text-left px-4 md:px-6 py-4 text-gray-700 font-medium text-sm hidden lg:table-cell">
+                <th className="text-left px-4 md:px-6 py-4 text-gray-700 font-medium text-sm">
                   Location
                 </th>
-                <th className="text-left px-4 md:px-6 py-4 text-gray-700 font-medium text-sm hidden xl:table-cell">
+                <th className="text-left px-4 md:px-6 py-4 text-gray-700 font-medium text-sm">
                   Orders
                 </th>
-                <th className="text-left px-4 md:px-6 py-4 text-gray-700 font-medium text-sm hidden xl:table-cell">
+                <th className="text-left px-4 md:px-6 py-4 text-gray-700 font-medium text-sm">
                   Amount Spent
                 </th>
                 <th className="text-left px-4 md:px-6 py-4 text-gray-700 font-medium text-sm">
@@ -149,30 +165,39 @@ const Customers = () => {
                         </div>
                       </td>
 
-                      <td className="px-4 md:px-6 py-4 hidden md:table-cell">
+                      <td className="px-4 md:px-6 py-4">
                         <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getStatusBadge(subscriptionStatus)}`}>
                           {subscriptionStatus}
                         </span>
                       </td>
 
-                      <td className="px-4 md:px-6 py-4 text-gray-600 text-sm hidden lg:table-cell">
+                      <td className="px-4 md:px-6 py-4 text-gray-600 text-sm">
                         <p className="truncate">{customer.phone || "N/A"}</p>
                       </td>
 
-                      <td className="px-4 md:px-6 py-4 text-gray-600 text-sm hidden xl:table-cell">
+                      <td className="px-4 md:px-6 py-4 text-gray-600 text-sm">
                         <p>2</p>
                       </td>
 
-                      <td className="px-4 md:px-6 py-4 text-gray-600 text-sm hidden xl:table-cell font-medium">
+                      <td className="px-4 md:px-6 py-4 text-gray-600 text-sm font-medium">
                         <p>$250.00</p>
                       </td>
 
                       <td className="px-4 md:px-6 py-4">
                         <div className="flex items-center gap-2">
-                          <button className="p-2 hover:bg-blue-100 rounded-lg transition" title="Edit">
+                          <button
+                            onClick={() => navigate(`/customer/update/${customer.id}`)}
+                            className="p-2 hover:bg-blue-100 rounded-lg transition"
+                            title="Edit"
+                          >
                             <FaPenToSquare size={18} className="text-blue-600" />
                           </button>
-                          <button className="p-2 hover:bg-red-100 rounded-lg transition" title="Delete">
+                          <button
+                            onClick={() => requestDelete(customer.id, customer.name)}
+                            disabled={deletingId === customer.id}
+                            className="p-2 hover:bg-red-100 rounded-lg transition disabled:cursor-not-allowed disabled:opacity-50"
+                            title="Delete"
+                          >
                             <FiTrash2 size={18} className="text-red-600" />
                           </button>
                         </div>
