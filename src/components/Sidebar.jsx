@@ -1,5 +1,9 @@
 ﻿import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import API_BASE_URL from '../config'
+
 
 const menuItems = [
   {
@@ -141,6 +145,33 @@ const Sidebar = ({ open = false, onClose }) => {
     onClose?.()
   }
 
+  const authHeaders = () => ({
+     Authorization: "Bearer " + localStorage.getItem("token"),
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  });
+
+  const navigate = useNavigate()
+  const handleLogout = async (event) => {
+    event.preventDefault()
+    const url = `${API_BASE_URL}/api/logout`
+    try {
+      await axios.post(
+        url,
+        {},
+        {
+          headers: authHeaders(),
+          withCredentials: true,
+        }
+      );
+      localStorage.removeItem("token");
+      onClose?.();
+      navigate("/", { replace: true });
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
   return (
     <aside
       className={`fixed inset-y-0 left-0 z-30 flex h-dvh w-[min(18rem,calc(100vw-2rem))] flex-col bg-slate-950 text-slate-100 shadow-2xl ring-1 ring-slate-800 transition-transform duration-200 md:w-72 md:translate-x-0 ${
@@ -254,8 +285,7 @@ const Sidebar = ({ open = false, onClose }) => {
 
         <div className="mt-6 rounded-[2rem] bg-slate-900/90 p-4 ring-1 ring-white/10 shadow-inner shadow-slate-950/20">
           <Link
-            to="/logout"
-            onClick={handleNavigate}
+            onClick={handleLogout}
             className="flex items-center gap-3 rounded-3xl px-4 py-3 text-sm font-medium text-slate-300 transition hover:bg-slate-800 hover:text-white"
           >
             <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-900 text-slate-400">

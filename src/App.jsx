@@ -29,6 +29,7 @@ import CreateSale from './pages/Sale/CreateSale.jsx'
 import UpdateSale from './pages/Sale/UpdateSale.jsx'
 import CreateSupplier from './pages/Supplier/CreateSupplier.jsx'
 import UpdateSupplier from './pages/Supplier/UpdateSupplier.jsx'
+import { Navigate } from 'react-router-dom'
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -93,6 +94,7 @@ function App() {
             <Route path="/sale/update/:id" element={<UpdateSale />} />
             <Route path="/supplier/create" element={<CreateSupplier />} />
             <Route path="/supplier/update/:id" element={<UpdateSupplier />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
       </div>

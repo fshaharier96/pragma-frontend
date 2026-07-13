@@ -1,17 +1,88 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
+import API_BASE_URL from '../../config'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 const Registration = () => {
+  const navigate = useNavigate()
   const [name, setName] = useState('')
   const [company, setCompany] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [toastMessage, setToastMessage] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
+  const toastTimeout = useRef(null)
 
-  const handleSubmit = (event) => {
+   useEffect(() => {
+      return () => {
+        if (toastTimeout.current) {
+          clearTimeout(toastTimeout.current)
+        }
+      }
+    }, [])
+  
+    const showToast = (message) => {
+      setToastMessage(message)
+      if (toastTimeout.current) {
+        clearTimeout(toastTimeout.current)
+      }
+      toastTimeout.current = setTimeout(() => {
+        setToastMessage('')
+      }, 3500)
+    }
+  
+    const showSuccessToast = (message) => {
+      setSuccessMessage(message)
+      if (toastTimeout.current) {
+        clearTimeout(toastTimeout.current)
+      }
+      toastTimeout.current = setTimeout(() => {
+        setSuccessMessage('')
+      }, 3500)
+    }
+  
+  const handleSubmit = async (event) => {
     event.preventDefault()
-    // Add registration handling here
-    console.log('Registering', { name, company, email, password, confirmPassword })
+    const url = `${API_BASE_URL}/api/register`
+  //  console.log("register url : ", url);
+
+    try{
+       const response = await axios.post(
+        url,
+        {
+          name:name,
+          company:company,
+          email:email,
+          password:password,
+          password_confirmation:confirmPassword,
+        },
+        {
+          headers:{
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          withCredentials: true,
+        }
+       )
+
+      if (response.status === 200) {
+      showSuccessToast('Login successful!')
+      navigate('/')
+    }
+    }catch(error){
+      const status = error.response?.status
+      console.log('Status code:', status)
+
+      if (status === 401) {
+        showToast('Invalid email or password. Please try again.')
+      }else{
+        showToast('Something went wrong. Please try again.')
+      }
+    }
+    
+   // console.log('Registering', { name, company, email, password, confirmPassword })
   }
 
   return (
