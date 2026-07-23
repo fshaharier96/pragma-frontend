@@ -14,20 +14,21 @@ const fields = [
     required: true,
   },
   { name: "sku", label: "SKU", placeholder: "product sku", required: true },
-  { 
-    name: "status", 
-    label: "Status", 
-    type: "select", 
-    placeholder: "Select status", 
-    required: true ,
-    options:[
+  {
+    name: "status",
+    label: "Status",
+    type: "select",
+    placeholder: "Select status",
+    required: true,
+    options: [
       { label: "Active", value: "active" },
       { label: "Inactive", value: "inactive" },
     ]
   },
-  { name: "purchase_price", label: "Purchase price", placeholder: "product purchase price"},
-  { name: "selling_price", label: "Selling price", placeholder: "product selling price"},
-  { name: "reorder_level", label: "Reorder level", type: "number", placeholder: "product reorder level",fullWidth: true },
+  { name: "purchase_price", label: "Purchase price", placeholder: "product purchase price" },
+  { name: "selling_price", label: "Selling price", placeholder: "product selling price" },
+  { name: "minimum_stock_quantity", label: "Minimum stock quantity", type: "number", placeholder: "product minimum stock quantity" },
+  { name: "reorder_level", label: "Reorder level", type: "number", placeholder: "product reorder level" },
   { name: "description", label: "Description", type: "textarea", placeholder: "Enter product description", fullWidth: true },
 
 ];
