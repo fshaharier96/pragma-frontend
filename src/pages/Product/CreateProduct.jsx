@@ -27,8 +27,7 @@ const fields = [
   },
   { name: "purchase_price", label: "Purchase price", placeholder: "product purchase price" },
   { name: "selling_price", label: "Selling price", placeholder: "product selling price" },
-  { name: "min_stock_quantity", label: "Minimum stock quantity", type: "number", placeholder: "product minimum stock quantity" },
-  { name: "reorder_level", label: "Reorder level", type: "number", placeholder: "product reorder level" },
+  { name: "min_stock_quantity", label: "Minimum stock quantity", type: "number", placeholder: "product minimum stock quantity", fullWidth: true },
   { name: "description", label: "Description", type: "textarea", placeholder: "Enter product description", fullWidth: true },
 
 ];
