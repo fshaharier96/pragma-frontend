@@ -1,13 +1,40 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import axios from 'axios'
+import API_BASE_URL from '../../config'
 
 const ForgetPasswordForm = () => {
   const [email, setEmail] = useState('')
+  const [message, setMessage] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
-    // Add password reset request logic here
-    console.log('Requesting password reset for', email)
+    setLoading(true)
+    const url = `${API_BASE_URL}/api/send-password-reset-link`
+    try {
+
+      const response = await axios.post(url,
+        {
+          email: email
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          withCredentials: true,
+        })
+
+      if (response.status === 200) {
+        setLoading(false)
+        setMessage('A password reset link has been sent to your email address.')
+      }
+
+    } catch (error) {
+      setLoading(false)
+      console.error('Error occurred while fetching forget password URL:', error)
+    }
   }
 
   return (
@@ -22,6 +49,12 @@ const ForgetPasswordForm = () => {
             Enter your email and we&apos;ll send you a secure link to reset your password.
           </p>
         </div>
+
+        {message && (
+          <div className="rounded-2xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-900">
+            {message}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
@@ -42,13 +75,29 @@ const ForgetPasswordForm = () => {
               />
             </div>
           </div>
+          {
+            loading ? (
+              <button
+                type="submit"
+                className="flex w-full items-center justify-center rounded-2xl bg-slate-400 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/20"
+              >
+                <svg className="animate-spin h-5 w-5 text-slate-900" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span className="ml-2 text-sm text-slate-900">Sending reset link...</span>
+              </button>
+            ) : (
+              <button
+                type="submit"
+                className="w-full rounded-2xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/20 transition hover:bg-slate-800"
+              >
+                Send reset link
+              </button>
+            )
+          }
 
-          <button
-            type="submit"
-            className="w-full rounded-2xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/20 transition hover:bg-slate-800"
-          >
-            Send reset link
-          </button>
+
         </form>
 
         <div className="mt-8 text-center text-sm text-slate-500">
