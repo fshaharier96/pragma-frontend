@@ -24,28 +24,28 @@ const initialValues = {
   description: "",
 };
 
-// const UpdateProduct = () => (
-//   <EntityFormPage
-//     mode="update"
-//     entityName="Product"
-//     endpoint="/api/products/update"
-//     listPath="/products"
-//     fields={fields}
-//     initialValues={initialValues}
-//     icon={FiEdit3}
-//     summaryTitle="Product preview"
-//     summaryDescription="Update product identity, category and description."
-//     previewFields={[
-//       { name: "name", label: "Product", emptyText: "Product name" },
-//       { name: "slug", label: "Slug", emptyText: "product-slug" },
-//       { name: "description", label: "Description", emptyText: "Product description" },
-//     ]}
-//     helpText="Product changes can affect purchase, sale and stock views."
-//   />
-// );
-
 const UpdateProduct = () => (
-  <UpdateProductForm />
-)
+  <EntityFormPage
+    mode="update"
+    entityName="Product"
+    endpoint="/api/products/update"
+    listPath="/products"
+    fields={fields}
+    initialValues={initialValues}
+    icon={FiEdit3}
+    summaryTitle="Product preview"
+    summaryDescription="Update product identity, category and description."
+    previewFields={[
+      { name: "name", label: "Product", emptyText: "Product name" },
+      { name: "slug", label: "Slug", emptyText: "product-slug" },
+      { name: "description", label: "Description", emptyText: "Product description" },
+    ]}
+    helpText="Product changes can affect purchase, sale and stock views."
+  />
+);
+
+// const UpdateProduct = () => (
+//   <UpdateProductForm />
+// )
 
 export default UpdateProduct;
