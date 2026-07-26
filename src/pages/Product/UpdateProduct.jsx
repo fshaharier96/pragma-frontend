@@ -1,5 +1,6 @@
 import { FiEdit3 } from "react-icons/fi";
 import EntityFormPage from "../../components/EntityFormPage";
+import UpdateProductForm from "./UpdateProductForm";
 
 const fields = [
   { name: "name", label: "Product name", placeholder: "Enter product name", required: true, fullWidth: true },
@@ -23,24 +24,28 @@ const initialValues = {
   description: "",
 };
 
+// const UpdateProduct = () => (
+//   <EntityFormPage
+//     mode="update"
+//     entityName="Product"
+//     endpoint="/api/products/update"
+//     listPath="/products"
+//     fields={fields}
+//     initialValues={initialValues}
+//     icon={FiEdit3}
+//     summaryTitle="Product preview"
+//     summaryDescription="Update product identity, category and description."
+//     previewFields={[
+//       { name: "name", label: "Product", emptyText: "Product name" },
+//       { name: "slug", label: "Slug", emptyText: "product-slug" },
+//       { name: "description", label: "Description", emptyText: "Product description" },
+//     ]}
+//     helpText="Product changes can affect purchase, sale and stock views."
+//   />
+// );
+
 const UpdateProduct = () => (
-  <EntityFormPage
-    mode="update"
-    entityName="Product"
-    endpoint="/api/products/update"
-    listPath="/products"
-    fields={fields}
-    initialValues={initialValues}
-    icon={FiEdit3}
-    summaryTitle="Product preview"
-    summaryDescription="Update product identity, category and description."
-    previewFields={[
-      { name: "name", label: "Product", emptyText: "Product name" },
-      { name: "slug", label: "Slug", emptyText: "product-slug" },
-      { name: "description", label: "Description", emptyText: "Product description" },
-    ]}
-    helpText="Product changes can affect purchase, sale and stock views."
-  />
-);
+  <UpdateProductForm />
+)
 
 export default UpdateProduct;
