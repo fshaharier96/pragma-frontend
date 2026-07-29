@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import API_BASE_URL from '../../config'
+import Spinner from '../../components/Spinner'
 
 const Login = () => {
   const navigate = useNavigate()
@@ -164,9 +165,9 @@ const Login = () => {
 
               <button
                 type="submit"
-                className="w-full rounded-2xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/20 transition hover:bg-slate-800"
+                className="flex items-center justify-center w-full rounded-2xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/20 transition hover:bg-slate-800"
               >
-                Signing in .....
+               <Spinner/>
               </button>
                
             ): (
