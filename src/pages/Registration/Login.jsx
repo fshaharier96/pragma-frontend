@@ -9,6 +9,7 @@ const Login = () => {
   const [password, setPassword] = useState('')
   const [toastMessage, setToastMessage] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
+  const [loading,setLoading] = useState(false)
   const toastTimeout = useRef(null)
 
   useEffect(() => {
