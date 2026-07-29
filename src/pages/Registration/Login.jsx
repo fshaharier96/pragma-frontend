@@ -45,6 +45,7 @@ const Login = () => {
     event.preventDefault()
     const url  = `${API_BASE_URL}/api/login`
     console.log('Login URL:', url)
+    setLoading(true)
     try {
 
         const response = await axios.post(
@@ -68,9 +69,13 @@ const Login = () => {
       navigate('/dashboard')
     }
 
+    setLoading(false)
+
     } catch (error) {
       const status = error.response?.status
       console.log('Status code:', status)
+
+      setLoading(false)
 
       if (status === 401) {
         showToast('Invalid email or password. Please try again.')
@@ -154,13 +159,26 @@ const Login = () => {
             <span className="text-slate-400">•</span>
             
           </div>
+          {
+            loading ? (
 
-          <button
-            type="submit"
-            className="w-full rounded-2xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/20 transition hover:bg-slate-800"
-          >
-            Sign in
-          </button>
+              <button
+                type="submit"
+                className="w-full rounded-2xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/20 transition hover:bg-slate-800"
+              >
+                Signing in .....
+              </button>
+               
+            ): (
+              <button
+                type="submit"
+                className="w-full rounded-2xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/20 transition hover:bg-slate-800"
+              >
+                Sign in
+              </button>
+            )
+          }
+          
         </form>
 
         <div className="mt-8 rounded-3xl bg-slate-50 p-5 text-center text-sm text-slate-500 shadow-inner shadow-slate-100">
