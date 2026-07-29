@@ -67,6 +67,7 @@ const Login = () => {
     if (response.status === 200) {
       showSuccessToast('Login successful!')
       localStorage.setItem('token', response.data.token)
+      localStorage.setItem('user',JSON.stringify(response.data.user))
       navigate('/dashboard')
     }
 

@@ -151,6 +151,15 @@ const menuItems = [
 const Sidebar = ({ open = false, onClose }) => {
   const [openMenu, setOpenMenu] = useState(null)
   const location = useLocation()
+  const user = JSON.parse(localStorage.getItem('user') || 'null')
+  const userName = user?.name ?? ""
+  const userShortName = userName
+                        .trim()
+                        .split(/\s+/)
+                        .filter(Boolean)
+                        .map(word => word.charAt(0))
+                        .join("")
+                        .toUpperCase();
 
   const isActive = (path) => location.pathname === path
   const hasActiveChild = (subMenu) => subMenu?.some((child) => isActive(child.path))
@@ -179,6 +188,7 @@ const Sidebar = ({ open = false, onClose }) => {
         }
       );
       localStorage.removeItem("token");
+      localStorage.removeItem("user");
       onClose?.();
       navigate("/", { replace: true });
     } catch (error) {
@@ -206,11 +216,11 @@ const Sidebar = ({ open = false, onClose }) => {
         <div className="mb-8 rounded-[2rem] bg-slate-900/90 p-4 ring-1 ring-white/10 shadow-inner shadow-slate-950/20">
           <div className="flex items-center gap-3">
             <div className="flex h-12 w-12 items-center justify-center rounded-3xl bg-slate-700 text-sm font-semibold text-slate-100">
-              JD
+              { userShortName }
             </div>
             <div>
-              <p className="text-sm font-semibold text-white">John Doe</p>
-              <p className="text-xs text-slate-500">john.doe@company.com</p>
+              <p className="text-sm font-semibold text-white">{user?.name ?? "user name"}</p>
+              <p className="text-xs text-slate-500">{user?.email ?? "user email"}</p>
             </div>
           </div>
         </div>
