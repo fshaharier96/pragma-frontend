@@ -25,6 +25,7 @@ const previewFields = [
 ]
 
 const UpdateProductForm = () => {
+    const navigate = useNavigate();
     const { id } = useParams();
     const [loading, setLoading] = useState(false);
     const [options, setOptions] = useState({});
@@ -91,7 +92,32 @@ const UpdateProductForm = () => {
         loadCategoryOptions();
     }, [])
 
+    const handleVariantChange = (index, e) => {
+        const { name, value } = e.target;
+
+        setFormData((prev) => ({
+            ...prev,
+            product_variants: (prev.product_variants || []).map((variant, variantIndex) =>
+                variantIndex === index
+                    ? { ...variant, [name]: value }
+                    : variant
+            ),
+        }));
+    };
+
+    const removeVariant = (indexToRemove) => {
+        setFormData((prev) => ({
+            ...prev,
+            product_variants: (prev.product_variants || []).filter(
+                (_, variantIndex) => variantIndex !== indexToRemove
+            ),
+        }));
+
+        setEditingVariant(null);
+    };
+
     const toggleEdit = (index) => {
+        console.log('toggle index',index)
         setEditingVariant(
             editingVariant === index
                 ? null
@@ -129,18 +155,22 @@ const UpdateProductForm = () => {
         setError("");
         setMessage("");
 
+        console.log("form Data inside submit",formData)
+
+        //return
+
         try {
-            const payload = {
-                name: formData.name,
-                slug: formData.slug,
-                category_id: formData.category_id,
-                description: formData.description,
-                variant_id: formData.product_variants?.[0]?.id,
-                sku: formData.product_variants?.[0]?.sku,
-                status: formData.product_variants?.[0]?.status,
-                purchase_price: formData.product_variants?.[0]?.purchase_price,
-                selling_price: formData.product_variants?.[0]?.selling_price,
-                min_stock_quantity: formData.product_variants?.[0]?.min_stock_quantity,
+            //const payload = {
+                // name: formData.name,
+                // slug: formData.slug,
+                // category_id: formData.category_id,
+                // description: formData.description,
+                // variant_id: formData.product_variants?.[0]?.id,
+                // sku: formData.product_variants?.[0]?.sku,
+                // status: formData.product_variants?.[0]?.status,
+                // purchase_price: formData.product_variants?.[0]?.purchase_price,
+                // selling_price: formData.product_variants?.[0]?.selling_price,
+                // min_stock_quantity: formData.product_variants?.[0]?.min_stock_quantity,
 
                 // product_variants: [
                 //     {
@@ -153,7 +183,9 @@ const UpdateProductForm = () => {
                 //             formData.product_variants?.[0]?.min_stock_quantity,
                 //     },
                 // ],
-            };
+            //};
+
+            const payload = formData
 
 
 
@@ -179,7 +211,7 @@ const UpdateProductForm = () => {
             setSubmitting(false);
         }
     }
-    console.log("Form data 1:", formData);
+    //console.log("Form data 1:", formData);
     const handleChange = (e) => {
         const { name, value } = e.target;
 
@@ -209,12 +241,13 @@ const UpdateProductForm = () => {
         }
     };
 
-    console.log("Form data 2:", formData);
+   // console.log("Form data 2:", formData);
     return (
         <div className="min-h-screen bg-slate-100 px-4 py-6 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-5xl">
                 <button
                     type="button"
+                    onClick={()=>navigate("/products")}
                     className="mb-6 inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50">
                     <FiArrowLeft />
                     Back to Products
@@ -450,22 +483,32 @@ const UpdateProductForm = () => {
                                                     <div>
 
                                                         <h3 className="font-semibold">
-                                                            Variant {index + 1}
+                                                            {variant.name}
                                                         </h3>
 
                                                         <p className="text-sm text-slate-500">
-                                                            {variant.sku}
+                                                            SKU : {variant.sku}
                                                         </p>
 
                                                     </div>
 
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => toggleEdit(index)}
-                                                        className="text-blue-600 font-medium"
-                                                    >
-                                                        Edit
-                                                    </button>
+                                                    <div className="flex gap-3">
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => toggleEdit(index)}
+                                                            className="font-medium text-blue-600 hover:text-blue-700"
+                                                        >
+                                                            Edit
+                                                        </button>
+
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => removeVariant(index)}
+                                                            className="font-medium text-red-600 hover:text-red-700"
+                                                        >
+                                                            Remove
+                                                        </button>
+                                                    </div>
 
                                                 </div>
 
@@ -503,16 +546,24 @@ const UpdateProductForm = () => {
 
                                                 {editingVariant === index && (
                                                     <div className="border-t pt-4 border-slate-200 grid md:grid-cols-2 gap-4 mt-5">
-
+                                                        <input
+                                                          name="name"
+                                                          placeholder="Enter Variant Name"
+                                                          value={variant.name}
+                                                          onChange={(e)=>handleVariantChange(index,e)}
+                                                          className={variantInputClass}
+                                                        />
                                                         <input
                                                             name="sku"
                                                             value={variant.sku}
+                                                            placeholder="Enter sku"
                                                             onChange={(e) => handleVariantChange(index, e)}
                                                             className={variantInputClass}
                                                         />
 
                                                         <input
                                                             name="purchase_price"
+                                                            placeholder="Enter Purchase Price"
                                                             value={variant.purchase_price}
                                                             onChange={(e) => handleVariantChange(index, e)}
                                                             className={variantInputClass}
@@ -520,6 +571,7 @@ const UpdateProductForm = () => {
 
                                                         <input
                                                             name="selling_price"
+                                                            placeholder="Enter Selling Price"
                                                             value={variant.selling_price}
                                                             onChange={(e) => handleVariantChange(index, e)}
                                                             className={variantInputClass}
@@ -527,6 +579,7 @@ const UpdateProductForm = () => {
 
                                                         <input
                                                             name="min_stock_quantity"
+                                                            placeholder="Enter Minimum Stock"
                                                             value={variant.min_stock_quantity}
                                                             onChange={(e) => handleVariantChange(index, e)}
                                                             className={variantInputClass}
