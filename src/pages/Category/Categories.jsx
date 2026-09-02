@@ -5,6 +5,7 @@ import { FiUserPlus, FiTrash2 } from "react-icons/fi";
 import { FaPenToSquare } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { useDeleteToast } from "../../hooks/useDeleteToast";
+import LoadMoreButton from "../../components/LoadMoreButton";
 
 
 const Categories = () => {
@@ -199,6 +200,10 @@ const navigate = useNavigate();
               )}
             </tbody>
           </table>
+          <div className="flex justify-end m-4">
+              <LoadMoreButton />
+          </div>
+        
         </div>
       </div>
     </div>
