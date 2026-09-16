@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   FiActivity,
   FiAlertTriangle,
@@ -10,6 +11,10 @@ import {
   FiShoppingBag,
   FiTruck,
 } from "react-icons/fi";
+import { FaPeopleGroup,FaTags} from "react-icons/fa6";
+import { FaBoxes } from "react-icons/fa";
+import axios from "axios";
+import API_BASE_URL from "../config";
 
 const stats = [
   {
@@ -70,7 +75,38 @@ const categoryPerformance = [
   { name: "Fixtures", value: 36, amount: "$9.8k", bar: "bg-indigo-500" },
 ];
 
+
+
 const Dashboard = () => {
+
+const [analyticsData,setAnalyticsData] = useState({})
+
+const fetchDashboardData = async ()=>{
+    try {
+       const response = await axios.get(
+         `${API_BASE_URL}/api/dashboard`,
+         {
+           headers: {
+              Authorization:
+               "Bearer " + localStorage.getItem("token"),
+              "Content-Type": "application/json",
+             Accept: "application/json",
+           },
+           withCredentials: true,
+         }
+       );
+       console.log("this dashboard data",response.data.data)
+       setAnalyticsData(response.data.data);
+     } catch (error) {
+       console.error(error);
+     }
+}
+  useEffect(()=>{
+    fetchDashboardData()
+  },[])
+
+  console.log("state data",analyticsData);
+
   return (
     <div className="min-h-screen bg-gray-50 px-4 py-6 text-slate-900 md:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl space-y-6">
@@ -93,20 +129,20 @@ const Dashboard = () => {
               <div className="grid gap-3 sm:grid-cols-3">
                 <div className="rounded-xl bg-white/10 p-4 ring-1 ring-white/10">
                   <p className="text-sm text-slate-300">Today Sales</p>
-                  <p className="mt-2 text-2xl font-bold">$12,840</p>
+                  <p className="mt-2 text-2xl font-bold">{analyticsData.totalSales}</p>
                 </div>
                 <div className="rounded-xl bg-white/10 p-4 ring-1 ring-white/10">
                   <p className="text-sm text-slate-300">Stock In</p>
-                  <p className="mt-2 text-2xl font-bold">785</p>
+                  <p className="mt-2 text-2xl font-bold">{analyticsData.totalStockIn}</p>
                 </div>
                 <div className="rounded-xl bg-white/10 p-4 ring-1 ring-white/10">
                   <p className="text-sm text-slate-300">Stock Out</p>
-                  <p className="mt-2 text-2xl font-bold">426</p>
+                  <p className="mt-2 text-2xl font-bold">{analyticsData.totalStockOut}</p>
                 </div>
               </div>
             </div>
 
-            <div className="rounded-2xl bg-white p-5 text-slate-900 shadow-2xl shadow-slate-950/20">
+            {/* <div className="rounded-2xl bg-white p-5 text-slate-900 shadow-2xl shadow-slate-950/20">
               <div className="mb-5 flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-slate-500">Warehouse Health</p>
@@ -145,31 +181,56 @@ const Dashboard = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </section>
 
         <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          {stats.map((stat) => {
-            const Icon = stat.icon;
-            const isUp = stat.trend === "up";
+          {[
+            {
+              title:"Total Products",
+              value:analyticsData.totalProducts,
+             // note:"All products",
+              icon:FiPackage,
+            },
+             {
+              title:"Total Categories",
+              value:analyticsData.totalCategories,
+             // note:"All products",
+              icon:FaTags,
+            },
+             {
+              title:"Total Suppliers",
+              value:analyticsData.totalSuppliers,
+             // note:"All products",
+              icon:FaBoxes,
+            },
+             {
+              title:"Total Customers",
+              value:analyticsData.totalCustomers,
+             // note:"All products",
+              icon:FaPeopleGroup
+            }
+          ].map((stat) => {
+             const Icon = stat.icon;
+            // const isUp = stat.trend === "up";
 
             return (
-              <div key={stat.title} className="rounded-xl bg-white p-5 shadow-md shadow-slate-200/80 ring-1 ring-slate-200/70">
+              <div  className="rounded-xl bg-white p-5 shadow-md shadow-slate-200/80 ring-1 ring-slate-200/70">
                 <div className="flex items-start justify-between gap-4">
-                  <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${stat.iconStyle}`}>
-                    <Icon className="h-6 w-6" />
+                  <div className={`flex h-12 w-12 items-center justify-center rounded-xl`}>
+                    <Icon  size={28} className="text-green-600 h-6 w-6 "/>
                   </div>
-                  <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ${
+                  {/* <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ${
                     isUp ? "bg-emerald-50 text-emerald-700" : "bg-rose-50 text-rose-700"
                   }`}>
                     {isUp ? <FiArrowUp className="h-3.5 w-3.5" /> : <FiArrowDown className="h-3.5 w-3.5" />}
                     {stat.change}
-                  </span>
+                  </span> */}
                 </div>
                 <p className="mt-5 text-sm font-medium text-slate-500">{stat.title}</p>
                 <h3 className="mt-1 text-3xl font-bold text-slate-950">{stat.value}</h3>
-                <p className="mt-2 text-sm text-slate-500">{stat.note}</p>
+                {/* <p className="mt-2 text-sm text-slate-500">{stat.note}</p> */}
               </div>
             );
           })}
